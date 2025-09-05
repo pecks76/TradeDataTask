@@ -1,0 +1,45 @@
+# version: '3.8'
+# TODO: in general, pass through stuff from here, rather than hardcoding elsewhere
+services:
+  kafka:
+    build: ./kafka
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9092:9092"
+
+  create-topic:
+    image: bitnami/kafka:latest
+    depends_on:
+      - kafka
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: |
+      "
+      until kafka-topics.sh --bootstrap-server kafka:9092 --list >/dev/null 2>&1; do
+        echo 'Waiting for Kafka...'
+        sleep 2
+      done
+
+      if ! kafka-topics.sh --bootstrap-server kafka:9092 --list | grep -q '^my-topic$'; then
+        kafka-topics.sh --bootstrap-server kafka:9092 --create --replication-factor 1 --partitions 1 --topic my-topic
+        echo 'Topic my-topic created.'
+      else
+        echo 'Topic my-topic already exists, skipping creation.'
+      fi
+      "
+
+  producer:
+    build: ./producer
+    depends_on:
+      - kafka
+    environment:
+      - CSV_URL=https://storage.googleapis.com/global-commodity-csv/commodity_trade_statistics_data.csv
+      - KAFKA_TOPIC=my-topic
+
+  consumer:
+    build: ./consumer
+    depends_on:
+      - kafka
+    environment:
+      - APP_KAFKA_TOPIC=my-topic
+# todo: work out why we have this difference between the producer and consumer for the topic env var name
