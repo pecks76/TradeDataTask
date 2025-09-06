@@ -13,7 +13,7 @@ public class ConsumerApplication {
 
     // Graceful shutdown hook to print aggregates
     @Bean
-    public CommandLineRunner runner(com.greg.consumer.TradeDataConsumer consumer) {
+    public CommandLineRunner runner(GlobalCommodityTradeStatConsumer consumer) {
         return args -> {
             System.out.println("✅ Consumer is running. Waiting for messages...");
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

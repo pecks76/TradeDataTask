@@ -1,3 +1,7 @@
 spring:
   kafka:
     bootstrap-servers: kafka:9092
+app:
+  kafka:
+    topic: ${KAFKA_TOPIC:my-topic}
+    agg-topic: ${KAFKA_AGG_TOPIC:agg-topic}

@@ -2,8 +2,9 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
     consumer:
-      group-id: trade-consumer-group
-      auto-offset-reset: earliest
-      # key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      # value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-
+      group-id: trade-consumer-group # what is this for?
+      auto-offset-reset: earliest # do we need this?
+app:
+  kafka:
+    topic: ${KAFKA_TOPIC:my-topic}
+    agg-topic: ${KAFKA_AGG_TOPIC:agg-topic}

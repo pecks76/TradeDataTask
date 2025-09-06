@@ -8,6 +8,7 @@ services:
     ports:
       - "9092:9092"
 
+# todo: Kafka can auto-create topics, check if it is good practice or not
   create-topic:
     image: bitnami/kafka:latest
     depends_on:
@@ -25,6 +26,12 @@ services:
         echo 'Topic my-topic created.'
       else
         echo 'Topic my-topic already exists, skipping creation.'
+      fi
+      if ! kafka-topics.sh --bootstrap-server kafka:9092 --list | grep -q '^agg-topic$'; then
+        kafka-topics.sh --bootstrap-server kafka:9092 --create --replication-factor 1 --partitions 1 --topic agg-topic
+        echo 'Topic agg-topic created.'
+      else
+        echo 'Topic agg-topic already exists, skipping creation.'
       fi
       "
 

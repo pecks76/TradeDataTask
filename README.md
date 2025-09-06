@@ -20,6 +20,6 @@ Everything is in the docker-compose file.
 * look at naming of classes 
 * once the design is settled, add unit tests
 * check the dependencies, looks like some of them are highlighted as having vulnerabilities
-* logging? 
+* logging? (there are some system.out.printlns in there at the moment)
 * error handling?
 * keep this README up to date, & tidy it up at the end 
