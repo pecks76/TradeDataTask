@@ -9,7 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Kafka CSV Producer</name>
+    <name>producer</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
