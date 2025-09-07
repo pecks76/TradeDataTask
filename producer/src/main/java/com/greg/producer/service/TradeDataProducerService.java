@@ -2,16 +2,19 @@ package com.greg.producer.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class TradeDataProducerService {
 
@@ -30,7 +33,7 @@ public class TradeDataProducerService {
         try (CSVReader reader = new CSVReader(new InputStreamReader(inputStream))) {
             String[] headers = reader.readNext(); // First line
             if (headers == null) {
-                System.err.println("❌ CSV is empty, aborting.");
+                log.error("CSV is empty, aborting.");
                 return;
             }
 
@@ -40,23 +43,27 @@ public class TradeDataProducerService {
                 sendCsvRowAsJson(headers, values);
                 count++;
                 if (count % 1000 == 0) {
-                    System.out.println("Sent " + count + " messages...");
+                    log.info("Sent {} messages", count);
                 }
             }
         }
 
         // Send DONE message
         kafkaTemplate.send(topic, "{\"type\":\"DONE\"}");
-        System.out.println("CSV streaming complete.");
+        log.info("CSV streaming complete");
     }
 
-    private void sendCsvRowAsJson(String[] headers, String[] values) throws Exception {
-        Map<String, String> jsonMap = new HashMap<>();
-        for (int i = 0; i < headers.length && i < values.length; i++) {
-            jsonMap.put(headers[i], values[i]);
+    private void sendCsvRowAsJson(String[] headers, String[] values) {
+        try {
+            Map<String, String> jsonMap = new HashMap<>();
+            for (int i = 0; i < headers.length && i < values.length; i++) {
+                jsonMap.put(headers[i], values[i]);
+            }
+            String json = objectMapper.writeValueAsString(jsonMap);
+            kafkaTemplate.send(topic, json).get(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error("Failed to send message for row: {}", Arrays.toString(values), e);
         }
-        String json = objectMapper.writeValueAsString(jsonMap);
-        kafkaTemplate.send(topic, json).get(5, TimeUnit.SECONDS); // waits 5 seconds ... hopefully this is enough
     }
 }
 
