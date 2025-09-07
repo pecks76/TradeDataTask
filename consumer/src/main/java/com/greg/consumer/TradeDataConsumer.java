@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class TradeDataConsumer {
 
@@ -27,7 +29,7 @@ public class TradeDataConsumer {
     @KafkaListener(topics = "${app.kafka.topic}")
     public void consume(String message) throws Exception {
 
-        System.out.println("Received message: " + message);
+        log.info("Message received: {}", message);
 
         if (message.contains("\"type\":\"DONE\"")) {
             System.out.println("DONE message received, sending aggregates...");
