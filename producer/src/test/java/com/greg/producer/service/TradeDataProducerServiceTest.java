@@ -24,7 +24,7 @@ class TradeDataProducerServiceTest {
         kafkaTemplate = mock(KafkaTemplate.class);
         when(kafkaTemplate.send(anyString(), any()))
                 .thenReturn(CompletableFuture.completedFuture(null));
-        producerService = new TradeDataProducerService(kafkaTemplate, "my-topic");
+        producerService = new TradeDataProducerService(kafkaTemplate, "trade-data-topic");
     }
 
     @Test
@@ -38,7 +38,7 @@ class TradeDataProducerServiceTest {
         producerService.streamCsv(inputStream);
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(kafkaTemplate, times(3)).send(eq("my-topic"), captor.capture());
+        verify(kafkaTemplate, times(3)).send(eq("trade-data-topic"), captor.capture());
         // 2 rows + DONE message
 
         List<String> messages = captor.getAllValues();

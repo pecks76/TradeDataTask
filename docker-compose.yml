@@ -21,17 +21,17 @@ services:
         sleep 2
       done
 
-      if ! kafka-topics.sh --bootstrap-server kafka:9092 --list | grep -q '^my-topic$'; then
-        kafka-topics.sh --bootstrap-server kafka:9092 --create --replication-factor 1 --partitions 1 --topic my-topic
-        echo 'Topic my-topic created.'
+      if ! kafka-topics.sh --bootstrap-server kafka:9092 --list | grep -q '^trade-data-topic$'; then
+        kafka-topics.sh --bootstrap-server kafka:9092 --create --replication-factor 1 --partitions 1 --topic trade-data-topic
+        echo 'Topic trade-data-topic created.'
       else
-        echo 'Topic my-topic already exists, skipping creation.'
+        echo 'Topic trade-data-topic already exists, skipping creation.'
       fi
-      if ! kafka-topics.sh --bootstrap-server kafka:9092 --list | grep -q '^agg-topic$'; then
-        kafka-topics.sh --bootstrap-server kafka:9092 --create --replication-factor 1 --partitions 1 --topic agg-topic
-        echo 'Topic agg-topic created.'
+      if ! kafka-topics.sh --bootstrap-server kafka:9092 --list | grep -q '^aggregation-topic$'; then
+        kafka-topics.sh --bootstrap-server kafka:9092 --create --replication-factor 1 --partitions 1 --topic aggregation-topic
+        echo 'Topic aggregation-topic created.'
       else
-        echo 'Topic agg-topic already exists, skipping creation.'
+        echo 'Topic aggregation-topic already exists, skipping creation.'
       fi
       "
 
@@ -41,12 +41,13 @@ services:
       - kafka
     environment:
       - CSV_URL=https://storage.googleapis.com/global-commodity-csv/commodity_trade_statistics_data.csv
-      - KAFKA_TOPIC=my-topic
+      - KAFKA_TOPIC=trade-data-topic
+      - KAFKA_AGG_TOPIC=trade-data-aggregation-topic
 
   consumer:
     build: ./consumer
     depends_on:
       - kafka
     environment:
-      - APP_KAFKA_TOPIC=my-topic
-# todo: work out why we have this difference between the producer and consumer for the topic env var name
+      - KAFKA_TOPIC=trade-data-topic
+      - KAFKA_AGG_TOPIC=aggregation-topic

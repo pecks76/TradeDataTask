@@ -18,7 +18,7 @@ class TradeDataConsumerTest {
     void setUp() {
         aggregatorService = Mockito.mock(TradeAggregateService.class);
         kafkaTemplate = Mockito.mock(KafkaTemplate.class);
-        consumer = new TradeDataConsumer(aggregatorService, kafkaTemplate, "agg-topic");
+        consumer = new TradeDataConsumer(aggregatorService, kafkaTemplate, "aggregation-topic");
         objectMapper = new ObjectMapper();
     }
 
@@ -34,6 +34,6 @@ class TradeDataConsumerTest {
     void testConsumeDoneMessage() throws Exception {
         String doneMessage = "{\"type\":\"DONE\"}";
         consumer.consume(doneMessage);
-        Mockito.verify(kafkaTemplate).send(Mockito.eq("agg-topic"), Mockito.anyString());
+        Mockito.verify(kafkaTemplate).send(Mockito.eq("aggregation-topic"), Mockito.anyString());
     }
 }

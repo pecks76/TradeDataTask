@@ -3,5 +3,6 @@ spring:
     bootstrap-servers: kafka:9092
 app:
   kafka:
-    topic: ${KAFKA_TOPIC:my-topic}
-    agg-topic: ${KAFKA_AGG_TOPIC:agg-topic}
+    topic: ${KAFKA_TOPIC:trade-data-topic}
+    aggregation-topic: ${KAFKA_AGG_TOPIC:aggregation-topic}
+

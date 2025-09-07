@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AggregateListener {
 
-    @KafkaListener(topics = "${app.kafka.agg-topic}", groupId = "producer")
+    @KafkaListener(topics = "${app.kafka.aggregation-topic}", groupId = "producer")
     public void listen(String message) {
         System.out.println("Aggregates received from Consumer:");
         System.out.println(message);

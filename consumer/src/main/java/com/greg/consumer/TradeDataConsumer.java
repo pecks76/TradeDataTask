@@ -18,7 +18,7 @@ public class TradeDataConsumer {
 
     public TradeDataConsumer(TradeAggregateService aggregateService,
                              KafkaTemplate<String, String> kafkaTemplate,
-                             @Value("${app.kafka.agg-topic}") String aggTopic) {
+                             @Value("${app.kafka.aggregation-topic}") String aggTopic) {
         this.aggregateService = aggregateService;
         this.kafkaTemplate = kafkaTemplate;
         this.aggTopic = aggTopic;

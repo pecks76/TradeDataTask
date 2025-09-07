@@ -13,7 +13,6 @@ Everything is in the docker-compose file.
 5. Docker file in two stages
     - build the maven project 
     - copy the jar to a smaller image and run it
-    - 
 
 # Questions 
 * The last requirement changes everything 
