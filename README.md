@@ -10,16 +10,13 @@ Everything is in the docker-compose file.
 3. I wanted everything to run from the same docker-compose file
    - this gave me some timing issues 
 4. Had to use com.opencsv in the Producer to read the csv file, as one column has commas in it
+5. Docker file in two stages
+    - build the maven project 
+    - copy the jar to a smaller image and run it
+    - 
 
 # Questions 
-* the last requirement changes everything 
+* The last requirement changes everything 
    - it's no longer purely streaming, we need a concept of "done"
    - it's unusual also in that the aggregates are sent back to the producer 
-
-# TODO list 
-* look at naming of classes 
-* once the design is settled, add unit tests
-* check the dependencies, looks like some of them are highlighted as having vulnerabilities
-* logging? (there are some system.out.printlns in there at the moment)
-* error handling?
-* keep this README up to date, & tidy it up at the end 
+* Have made assumptions as to what "aggregate" means 

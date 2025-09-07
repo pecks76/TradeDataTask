@@ -1,13 +1,10 @@
-# Use Maven + JDK image to build
-FROM maven:3.8.1-openjdk-17-slim AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Use slim JDK to run the app
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY --from=build /app/target/producer-0.0.1-SNAPSHOT.jar app.jar
-
+COPY --from=builder /app/target/producer-1.0.0.jar app.jar
 CMD ["java", "-jar", "app.jar"]
