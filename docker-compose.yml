@@ -42,7 +42,7 @@ services:
     environment:
       - CSV_URL=https://storage.googleapis.com/global-commodity-csv/commodity_trade_statistics_data.csv
       - KAFKA_TOPIC=trade-data-topic
-      - KAFKA_AGG_TOPIC=trade-data-aggregation-topic
+      - KAFKA_AGG_TOPIC=aggregation-topic
 
   consumer:
     build: ./consumer
