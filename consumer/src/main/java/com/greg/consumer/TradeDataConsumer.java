@@ -18,6 +18,8 @@ public class TradeDataConsumer {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String aggTopic;
 
+    private int messageCount = 0;
+
     public TradeDataConsumer(TradeAggregateService aggregateService,
                              KafkaTemplate<String, String> kafkaTemplate,
                              @Value("${app.kafka.aggregation-topic}") String aggTopic) {
@@ -29,10 +31,13 @@ public class TradeDataConsumer {
     @KafkaListener(topics = "${app.kafka.topic}")
     public void consume(String message) throws Exception {
 
-        log.info("Message received: {}", message);
+        messageCount++;
+        if (messageCount % 1000 == 0) {
+            log.info("Consumed {} messages", messageCount);
+        }
 
         if (message.contains("\"type\":\"DONE\"")) {
-            System.out.println("DONE message received, sending aggregates...");
+            log.info("DONE message received, sending aggregates...");
             String json = new ObjectMapper().writeValueAsString(aggregateService.getAggregates());
             kafkaTemplate.send(aggTopic, json);
             return;

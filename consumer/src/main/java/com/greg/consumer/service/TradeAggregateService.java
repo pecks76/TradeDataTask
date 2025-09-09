@@ -26,7 +26,6 @@ public class TradeAggregateService {
                 try {
                     tradeUsd = json.get("trade_usd").asDouble();
                 } catch (NumberFormatException e) {
-                    // optionally log warning
                     log.warn("Invalid trade_usd value: {}", json.get("trade_usd").asText());
                 }
             }
